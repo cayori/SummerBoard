@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="board">
+	<typeAlias alias="BoardModel" type="net.nice19.smboard.board.model.BoardModel" />
+	<typeAlias alias="BoardCommentModel" type="net.nice19.smboard.board.model.BoardCommentModel" />
+	
+	<select id="getBoardList" parameterClass="java.util.HashMap" resultClass="BoardModel">
+		SELECT
+			b.idx, 
+			b.writer, 
+			b.subject, 
+			b.content, 
+			b.hitcount, 
+			a.recommendcount,
+			to_char(b.writedate, 'YYYY-MM-DD HH:MI:SS') writeDate, 
+			count(c.idx) as "comment",
+			b.writerId, 
+			b.fileName, 
+			b.rnum
+		FROM	
+			(SELECT
+				a.idx,
+				a.writer,
+				a.subject,
+				a.content,
+				a.hitcount,
+				a.recommendcount,
+				a.writedate, a.writerId, a.fileName, rownum rnum
+			FROM
+				(SELECT
+					idx,
+					writer,
+					subject, 
+					content, 
+					hitcount,
+					recommendcount,
+					writedate,
+					writerId,
+					fileNam
+				FROM jmboard
+				ORDER BY idx DESC
+				) a	
+			)b
+		LEFT OUTER JOIN jmboard_comment c ON b.idx = c.linkedarticlenum
+		WHERE rnum between #startArticleNum# and #endArticleNum#
+		GROUP BY
+			b.idx,
+			b.writer,
+			b.subject,
+			b.content,
+			b.hitcount,
+			b.recommendcount,
+			b.writedate,
+			b.rnum,
+			b.writerId,
+			b.fileName
+		ORDER BY b.idx DESC
+	</select>
+	
+	<select id="getTotalnum" resultClass="int">
+		SELECT count(idx)
+		FROM jmboard
+	</select>
+	
+	<select id="getSearchTotalNum" resultClass="int">
+		SELECT count(idx)
+		FROM jmboard
+		WHERE $type$ like '%$keyword$%'
+	</select>
+	
+	<select id="searchArticle" parameterClass="java.util.HashMap" resultClass="BoardModel">
+		SELECT
+			b.idx,
+			b.writer,
+			b.subject,
+			b.content,
+			b.hitcount,
+			b.recommendcount,
+			to_char(b.writedate, 'YYYY-MM-DD HH:MI:SS') wrteDate,
+			count(c.idx) as "comment",
+			b.wriiterId, 
+			b.fileName, 
+			b.rnum
+		FROM
+			(SELECT
+				a.idx,
+				a.writer,
+				a.subject,
+				a.content,
+				a.hitcount,
+				a.recommendcount,
+				a.writedate,
+				a.writerId,
+				a.fileName,
+				rownum rnum
+			FROM
+				(SELECT
+					idx,
+					writer,
+					subject,
+					content,
+					hitcount,
+					recommendcount,
+					writedate,
+					writerId,
+					fileName
+				FROM jmboard
+				WHERE $type$ LIKE '%$keyword$%'
+				ORDER BY idx DESC) a
+			) b 
+			LEFT OUTER JOIN jmboard_comment c ON b.idx = c.linkedarticlenum
+			WHERE rnum BETWEEN #startArticleNum# and #endArticleNum#
+			GROUP BY
+				b.idx,
+				b.writer,
+				b.subject,
+				b.content,
+				b.hitcount,
+				b.recommendcount,
+				b.writedate,
+				b.rnum,
+				b.writerId,
+				b.fileName
+			ORDER BY b.idx DESC
+	</select>
+	
+	<select id="getOneArticle" parameterClass="int" resultClass="BoardModel">
+		SELECT
+			idx,
+			writer,
+			subject,
+			content,
+			hitcount,
+			recommendcount,
+			writedate,
+			writerId,
+			fileName
+		FROM jmboard
+		WHERE idx = #idx#
+	</select>
+	
+	<select id="getCommendtList" parameterClass="int" resultClass="BoardCommentModel">
+		SELECT
+			idx,
+			writer,
+			content,
+			writeDate,
+			linkedArticleNum,
+			writerId
+		FROM jmboard_comment
+		WHERE linkedArticleNum = #idx#
+		ORDER BY idx DESC
+	</select>
+	
+	<select id="getOneComment" parameterClass="int" resultClass="BoardCommentModel">
+		SELECT
+			idx,
+			writer,
+			content,
+			writeDate,
+			linkedArticleNum,
+			writerId
+		FROM jmboard_comment
+		WHERE idx = #idx#
+	</select>
+	
+	<insert id="writeArticle" parameterClass="BoardModel">
+		INSERT INTO jmboard
+			(idx, writer, subject, content, hitcount, recommendcount, writeDate, writerId, fileName)
+		VALUES
+			(BOARDLISTSEQ.nextVal, #writer#, #subject#, #content#, 0, 0, sysdate, #writerId#, #fileName#)
+	</insert>
+	
+	<insert id="writeComment" parameterClass="BoardCommentModel">
+		INSERT INTO jmboard_comment
+			(idx, writer, content, writeDate, linkedArticleNum, writerId)
+		VALUES
+			(BOARDCOMMENTSEQ.nextVal, #writer#, #content#, sysdate, #linkedArticleNum#, #writerId#)
+	</insert>
+	
+	<update id="updateHitcount" parameterClass="java.util.HashMap">
+		UPDATE	jmboard
+		SET		hitcount = #hitcount#
+		WHERE	idx = #idx#
+	</update>
+	
+	<update id="updateRecommendcount" parameterClass="java.util.HashMap">
+		UPDATE	jmboard
+		SET		recommendcount = #recommendcount#
+		WHERE	idx = #idx#
+	</update>
+	
+	<delete id="deleteComment" parameterClass="int">
+		DELETE FROM jmboard_comment
+		WHERE idx = #idx#
+	</delete>
+	
+	<delete id="deleteArticle" parameterClass="int">
+		DELETE FROM jmboard
+		WHERE idx = #idx#
+	</delete>
+	
+	<update id="modifyArticle" parameterClass="BoardModel">
+		UPDATE	jmboard
+		SET		subject = #subject#,
+				content = #content#,
+				fileName = #fileName#
+		WHERE idx = #idx#
+	</update>
+</sqlMap>
