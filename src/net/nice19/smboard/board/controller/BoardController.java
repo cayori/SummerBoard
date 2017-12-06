@@ -108,6 +108,24 @@ public class BoardController {
 			}else {
 				pageHtml.append("<span><a href=\"list.do?page=" + (currentPage-1) + "\"><이전></a>&nbsp&nbsp;");
 			}
+			
+			for(int i = startPage; i<= lastPage; i++) {
+				if(i == currentPage){
+					pageHtml.append(".&nbsp;<strong>");
+					pageHtml.append("<a href=\"list.do?page="+i+"\"class=\"page\">" +i+ "</a>");
+				}else {
+					pageHtml.append(".&nbsp;<a href=\"list.do?page=" +i+ "\"class=\"page\">" +i+ "</a>&nbsp;");
+				}
+			}
+			if(currentPage == lastPage) {
+				pageHtml.append(".</span>");
+			} else {
+				pageHtml.append(".&nbsp;&nbsp;<a href=\"list.do?page=" + (currentPage+1) + "\"><다음></a></span>");
+			}
+			//
+		//else: 검색키워드가 있는 경우
+		} else {
+			
 		}
 	}
 
