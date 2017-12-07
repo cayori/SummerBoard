@@ -10,7 +10,7 @@
 	<!-- controllers -->
 	<bean id="loginController" class="net.nice19.smboard.login.controller.LoginController" />
 	<bean id="memberController" class="net.nice19.smboard.member.controller.MemberController" />
-	<bean id="boardController" class="net.nice19/smboard.board.controller.BoardController" />
+	<bean id="boardController" class="net.nice19.smboard.board.controller.BoardController" />
 	
 	<!-- viewResolver -->
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -34,5 +34,5 @@
 		</property>
 	</bean>
 	
-	<bean id="sessionInterceptor" class="neet.nice19.smboard.interceptor.SessionInterceptor" />
+	<bean id="sessionInterceptor" class="net.nice19.smboard.interceptor.SessionInterceptor" />
 </beans>

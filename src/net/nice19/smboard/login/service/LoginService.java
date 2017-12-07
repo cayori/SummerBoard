@@ -8,7 +8,7 @@ public class LoginService implements LoginDao {
 
 	private SqlMapClientTemplate sqlMapClientTemplate;
 	
-	public void setSqlmapClientTemplate(SqlMapClientTemplate sqlMapClientTemplate) {
+	public void setSqlMapClientTemplate(SqlMapClientTemplate sqlMapClientTemplate) {
 		this.sqlMapClientTemplate = sqlMapClientTemplate;
 	}
 	

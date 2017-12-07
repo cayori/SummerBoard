@@ -49,6 +49,14 @@ public class LoginController {
 			mav.addObject("errCode", 1);			// DB 에 해당 유저가 없는 경우
 			mav.setViewName("/board/login");
 			return mav;
+		}
+		
+		// check password
+		if(loginCheckResult.getUserPw().equals(userPw)) {
+			session.setAttribute("userId", userId);
+			session.setAttribute("userName", loginCheckResult.getUserName());
+			mav.setViewName("redirect:/board/list.do");
+			return mav;
 		}else {
 			mav.addObject("userId", userId);
 			mav.addObject("errCode", 2);			// 비번 오류
@@ -57,7 +65,7 @@ public class LoginController {
 		}
 	}
 	
-	@RequestMapping("/logoug.do")
+	@RequestMapping("/logout.do")
 	public String logout(HttpSession session) {
 		session.invalidate();
 		return "redirect:login.do";

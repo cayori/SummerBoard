@@ -125,8 +125,235 @@ public class BoardController {
 			//
 		//else: 검색키워드가 있는 경우
 		} else {
+			if(currentPage == 1) {
+				pageHtml.append(".</span>");
+			}else {
+				pageHtml.append(".&nbsp;&nbsp;<a href=\"list.do?page" +(currentPage-1) + "&type=" +type+ "&keyword=" +keyword+ "\"><이전></a></span>");
+			}
+			
+			for (int i=startPage; i<=lastPage; i++) {
+				if(i == currentPage) {
+					pageHtml.append(".&nbsp;<strong>");
+					pageHtml.append("<a href=\"list.do?page=" +i+ "&type=" +type+ "&keyword=" +keyword+ "\"class=\"page\">" +i+ "</a>&nbsp;");
+					pageHtml.append("&nbsp;</strong>");
+				} else {
+					pageHtml.append(".&nbsp;<a href=\"list.do?page\">" +i+ "&type=" +type+ "&keyword=" +keyword+ "\"class=\"page\">" +i+ "</a>&nbsp;");
+				}
+			}
+			if(currentPage == lastPage) {
+				pageHtml.append("</span>");
+			}else {
+				pageHtml.append(".%nbsp;%nbsp;<a href=\"list.do?page=" +(currentPage+1)+ "&type=" +type+ "&keyword" +keyword+ "\"><다음></a></span>");
+			}
+		}
+		//
+		return pageHtml;
+	}
+	
+	@RequestMapping("/view.do")
+	public ModelAndView boardView(HttpServletRequest request) {
+		int idx = Integer.parseInt(request.getParameter("idx"));
+		BoardModel board = boardService.getOneArticle(idx);				// 선택한 article 모델 가져오기
+		boardService.updateHitcount(board.getHitcount()+1, idx);		// 조회수 +1 하기
+		
+		List<BoardCommentModel> commentList = boardService.getCommentList(idx);
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("board", board);
+		mav.addObject("commentList", commentList);
+		mav.setViewName("/board/view");
+		return mav;
+	}
+	
+	@RequestMapping("/write.do")
+	public String boardWrite(@ModelAttribute("BoardModel") BoardModel boardModel) {
+		return "/board/write";
+	}
+	
+	@RequestMapping(value="/write.do", method=RequestMethod.POST)
+	public String boardWriteProc (@ModelAttribute("BoardModel") BoardModel boardModel, MultipartHttpServletRequest request) {
+		
+		// 업로드 파일 가져오기
+		MultipartFile file = request.getFile("file");
+		String fileName = file.getOriginalFilename();
+		File uploadFile = new File(uploadPath + fileName);
+		
+		// 파일이름 중복될때
+		if(uploadFile.exists()) {
+			fileName = new Date().getTime() + fileName;
+			uploadFile = new File(uploadPath = fileName);
+		}
+		
+		// 업로드 경로에 파일 저장
+		try {
+			file.transferTo(uploadFile);
+		}catch(Exception e) {
 			
 		}
+		boardModel.setFileName(fileName);
+		//
+		
+		// 개행문자 br 태그로 바꾸기
+		String content = boardModel.getContent().replaceAll("\r\n", "<br />");
+		boardModel.setContent(content);
+		//
+		boardService.writeArticle(boardModel);
+		
+		return "redirect:list.do";
+	}
+	
+	@RequestMapping("/commentWrite.do")
+	public ModelAndView commentWriteProc(@ModelAttribute("CommentModel") BoardCommentModel commentModel) {
+		// 개행문자 br 태그로 바꾸기
+		String content = commentModel.getContent().replaceAll("\r\n", "<br />");
+		commentModel.setContent(content);
+		//
+		boardService.writeComment(commentModel);
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("idx", commentModel.getLinkedArticleNum());
+		mav.setViewName("redirect:view.do");
+		
+		return mav;
+	}
+	
+	@RequestMapping("/modify.do")
+	public ModelAndView boardModify(HttpServletRequest request, HttpSession session) {
+		String userId = (String) session.getAttribute("userId");
+		int idx = Integer.parseInt(request.getParameter("idx"));
+		
+		BoardModel board = boardService.getOneArticle(idx);
+		// br 태그를 개행문자로 바꾸기
+		String content = board.getContent().replaceAll("<br />", "\r\n");
+		board.setContent(content);
+		//
+		
+		ModelAndView mav = new ModelAndView();
+		
+		if(!userId.equals(board.getWriterId())) {
+			mav.addObject("errCode", "1");			// 금지된 접속
+			mav.addObject("idx", idx);
+			mav.setViewName("redirect:view.do");
+		} else {
+			mav.addObject("board", board);
+			mav.setViewName("/board/modify");
+		}
+		
+		return mav;
+	}
+	
+	@RequestMapping(value="/modify.do", method=RequestMethod.POST)
+	public ModelAndView boardModifyProc(@ModelAttribute("BoardModel") BoardModel boardModel, MultipartHttpServletRequest request) {
+		String orgFileName = request.getParameter("orgFile");
+		MultipartFile newFile = request.getFile("newFile");
+		String newFileName = newFile.getOriginalFilename();
+		
+		boardModel.setFileName(orgFileName);
+		
+		// if: 업로드 파일 변경시
+		if(newFile != null && !newFileName.equals("")) {
+			if(orgFileName != null || !orgFileName.equals("")) {
+				// 기존 파일 삭제
+				File removeFile = new File(uploadPath + orgFileName);
+				removeFile.delete();
+			}
+			// 새 업로드 파일 생성
+			File newUploadFile = new File(uploadPath + newFileName);
+			try {
+				newFile.transferTo(newUploadFile);
+			} catch(Exception e) {
+				e.printStackTrace();				
+			}
+			//
+			boardModel.setFileName(newFileName);
+		}
+		//
+		// 개행문자를 br 태그로 변경
+		String content = boardModel.getContent().replaceAll("\r\n",  "<br />");
+		boardModel.setContent(content);
+		//
+		
+		boardService.modifyArticle(boardModel);
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("idx", boardModel.getIdx());
+		mav.setViewName("redirect:/board/view.do");
+		return mav;
+	}
+	
+	@RequestMapping("/delete.do")
+	public ModelAndView boardDelete(HttpServletRequest request, HttpSession session) {
+		String userId = (String) session.getAttribute("userId");
+		int idx = Integer.parseInt(request.getParameter("idx"));
+		
+		BoardModel board = boardService.getOneArticle(idx);
+		ModelAndView mav = new ModelAndView();
+		
+		if(!userId.equals(board.getWriterId())) {
+			mav.addObject("errCode", "1");			// forbidden connection
+			mav.addObject("idx", idx);
+			mav.setViewName("redirect:view.do");
+		} else {
+			List<BoardCommentModel> commentList = boardService.getCommentList(idx);
+			// 댓글 있는지 검사
+			if(commentList.size() > 0) {
+				mav.addObject("errCode", "2");			// 댓글이 있어서 글 못지움
+				mav.addObject("idx", idx);
+				mav.setViewName("redirect:view.do");
+			}else {
+				// if: 문서에 파일 있으면 지워라
+				if(board.getFileName() != null) {
+					File removeFile = new File(uploadPath + board.getFileName());
+					removeFile.delete();
+				}
+				//
+				boardService.deleteArticle(idx);
+				
+				mav.setViewName("redirect:list.do");
+			}
+		}
+		return mav;
+	}
+	
+	@RequestMapping("/commentDelete.do")
+	public ModelAndView commentDelete(HttpServletRequest request, HttpSession session) {
+		int idx = Integer.parseInt(request.getParameter("idx"));
+		int linkedArticleNum = Integer.parseInt(request.getParameter("linkedArticlenum"));
+		
+		String userId = (String) session.getAttribute("userId");
+		BoardCommentModel comment = boardService.getOneComment(idx);
+		
+		ModelAndView mav = new ModelAndView();
+		
+		if(!userId.equals(comment.getWriterId())) {
+			mav.addObject("errCode", "1");
+		}else {
+			boardService.deleteComment(idx);
+		}
+		
+		mav.addObject("idx", linkedArticleNum);			// 게시물로 돌아가기
+		mav.setViewName("redirect:view.do");
+		
+		return mav;
+	}
+	
+	@RequestMapping("/recommend.do")
+	public ModelAndView updateRecommendcount(HttpServletRequest request, HttpSession session) {
+		int idx = Integer.parseInt(request.getParameter("idx"));
+		String userId = (String) session.getAttribute("userId");
+		BoardModel board = boardService.getOneArticle(idx);
+		
+		ModelAndView mav = new ModelAndView();
+		
+		if(userId.equals(board.getWriterId())) {
+			mav.addObject("errCode", "1");
+		}else {
+			boardService.updateRecommendCount(board.getRecommendcount()+1, idx);
+		}
+		
+		mav.addObject("idx", idx);
+		mav.setViewName("redirect:/board/view.do");
+		
+		return mav;
 	}
 
 }

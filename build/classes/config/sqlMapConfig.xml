@@ -15,6 +15,6 @@
 	</transactionManager>
 	
 	<sqlMap resource="net/nice19/smboard/ibatis/member.xml" />
-	<sqlMap resource="net/nice19/smboard/ibatis/baord.xml" />
+	<sqlMap resource="net/nice19/smboard/ibatis/board.xml" />
 	<sqlMap resource="net/nice19/smboard/ibatis/login.xml" />
 </sqlMapConfig>

@@ -34,7 +34,7 @@ public interface BoardDao {
 	void updateHitcount(int hitcount, int idx);
 	
 	// 추천 수 업데이트
-	void updateRecommendCount(int recommentcount, int idx);
+	void updateRecommendCount(int recommendcount, int idx);
 	
 	// 게시물 숫자
 	int getTotalNum();

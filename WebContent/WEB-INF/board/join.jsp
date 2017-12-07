@@ -9,7 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>회원가입</title>
 <link href="<%=request.getContextPath()%>/css/main.css" rel="stylesheet" type="text/css">
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquer-1.7.1.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.7.1.js"></script>
 <c:if test="${errCode == null }">
 	<c:set var="errCode" value="\"\""></c:set>
 </c:if>
@@ -17,11 +17,11 @@
 	function errCodeCheck(){
 		var errCode = ${errCode};
 		if(errCode != null || errCode != ""){
-			switch(errCode){
-			case1:
+			switch(errCode) {
+			case 1:
 				alert("이미 가입된 이메일 주소입니다");
 				break;
-			case2:
+			case 2:
 				alert("회원가입 처리가 실패하였습니다. 잠시 후 다시 시도해 주십시오.");
 				break;
 			}

@@ -15,11 +15,13 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 		//
 		
 		// login.do, join.do 실행시 걸리도록
-		if(request.getRequestURI().equals("/SummerBoard/login.do") || request.getRequestURI().equals("/SummerBoard/join.do")){
+		if(request.getRequestURI().equals("/SummerBoard/login.do") || request.getRequestURI().equals("/SummerBoard/member/join.do")){
 			if(userId != null) {  // 로그인이 되어 있으면
+				System.out.println("로그인 됨");
 				response.sendRedirect(request.getContextPath() + "/board/list.do");
 				return true;
 			}else {
+				System.out.println("로그인 안됨");
 				return true;
 			}
 		}

@@ -14,7 +14,7 @@
 			b.subject, 
 			b.content, 
 			b.hitcount, 
-			a.recommendcount,
+			b.recommendcount,
 			to_char(b.writedate, 'YYYY-MM-DD HH:MI:SS') writeDate, 
 			count(c.idx) as "comment",
 			b.writerId, 
@@ -28,7 +28,10 @@
 				a.content,
 				a.hitcount,
 				a.recommendcount,
-				a.writedate, a.writerId, a.fileName, rownum rnum
+				a.writedate, 
+				a.writerId, 
+				a.fileName, 
+				rownum rnum
 			FROM
 				(SELECT
 					idx,
@@ -39,7 +42,7 @@
 					recommendcount,
 					writedate,
 					writerId,
-					fileNam
+					fileName
 				FROM jmboard
 				ORDER BY idx DESC
 				) a	
@@ -60,7 +63,7 @@
 		ORDER BY b.idx DESC
 	</select>
 	
-	<select id="getTotalnum" resultClass="int">
+	<select id="getTotalNum" resultClass="int">
 		SELECT count(idx)
 		FROM jmboard
 	</select>

@@ -13,7 +13,7 @@ public class BoardService implements BoardDao {
 	private SqlMapClientTemplate sqlMapClientTemplate;
 	private HashMap<String, Object> valueMap = new HashMap<String, Object>();
 	
-	public void setSqlmapClientTemplate(SqlMapClientTemplate sqlMapClientTemplate) {
+	public void setSqlMapClientTemplate(SqlMapClientTemplate sqlMapClientTemplate) {
 		this.sqlMapClientTemplate = sqlMapClientTemplate;
 	}
 	

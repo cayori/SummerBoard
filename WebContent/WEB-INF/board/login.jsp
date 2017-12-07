@@ -8,7 +8,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>LOGIN</title>
-<link href="<%=request.getContextPath()%>/css/main.css %>" rel="stylesheet" type="text/css">
+<link href="<%=request.getContextPath()%>/css/main.css" rel="stylesheet" type="text/css">
 <c:if test="${errCode == null}">
 	<c:set var="errCode" value="\"\""></c:set>
 </c:if>
@@ -17,13 +17,13 @@
 		var errCode = ${errCode};
 		if(errCode != null || errCode != ""){
 			switch(errCode){
-			case1:
+			case 1:
 				alert("가입된 이메일 주소가 아닙니다!");
 				break;
-			case2:
+			case 2:
 				alert("비밀번호가 일치하지 않습니다");
 				break;
-			case3:
+			case 3:
 				alert("회원가입 처리가 완료되었습니다! 로그인 해주세요!");
 				location.href = "<%=request.getContextPath()%>/login.do";
 				break;
@@ -54,7 +54,7 @@
 				
 				<center>
 					<input type="submit" value="로그인" class="submitBt" /><br><br>
-					<a href="<%=request.getContextPath()%>/member/join/do">회원가입</a>
+					<a href="<%=request.getContextPath()%>/member/join.do">회원가입</a>
 				</center>
 			</fieldset>
 		</form>
