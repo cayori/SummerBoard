@@ -81,7 +81,7 @@
 						</td>
 						<td class="comment">${board.comment }</td>
 						<td class="hitcount">${board.hitcount }</td>
-						<td class="recommentcount">${board.recommentcount }</td>
+						<td class="recommendcount">${board.recommendcount }</td>
 						<td class="writeDate">${board.writeDate }</td>
 					</tr>
 				</c:forEach>

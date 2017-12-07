@@ -9,7 +9,7 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.7.1.js"></script>
 <script type="text/javascript">
 	function writeFormCheck(){
-		if($("#suject").val() == null || $("#subject").val() == ""){
+		if($("#subject").val() == null || $("#subject").val() == ""){
 			alert("제목을 입력해 주세요!");
 			$("#subject").focus();
 			return false;
@@ -46,7 +46,7 @@
 				<th><label for="file">파일</label></th>
 				<td>
 					<input type="file" id="newFile" name="newFile" />
-					<p>업로드된 파일: ${board.filename }</p>
+					<p>업로드된 파일: ${board.fileName }</p>
 					<input type="hidden" id="orgFile" name="orgFile" value="${board.fileName }" />
 				</td>
 			</tr>

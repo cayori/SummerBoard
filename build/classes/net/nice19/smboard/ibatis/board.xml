@@ -84,7 +84,7 @@
 			b.recommendcount,
 			to_char(b.writedate, 'YYYY-MM-DD HH:MI:SS') wrteDate,
 			count(c.idx) as "comment",
-			b.wriiterId, 
+			b.writerId, 
 			b.fileName, 
 			b.rnum
 		FROM
@@ -145,7 +145,7 @@
 		WHERE idx = #idx#
 	</select>
 	
-	<select id="getCommendtList" parameterClass="int" resultClass="BoardCommentModel">
+	<select id="getCommentList" parameterClass="int" resultClass="BoardCommentModel">
 		SELECT
 			idx,
 			writer,

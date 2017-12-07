@@ -1,22 +1,22 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR" pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<title>»õ ±Û ¾²±â</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ìƒˆ ê¸€ ì“°ê¸°</title>
 <link href="<%=request.getContextPath() %>/css/board.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.7.1.js"></script>
 <script type="text/javascript">
 	function writeFormCheck(){
 		if($("#subject").val() == null || $("#subject").val() == ""){
-			alert("Á¦¸ñÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä!");
+			alert("ì œëª©ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”!");
 			$("#subject").focus();
 			return false;
 		}
 		if($("#content").val() == null || $("#content").val() == ""){
-			alert("³»¿ëÀ» ÀÔ·ÂÇØ ÁÖ¼¼¿ä!");
+			alert("ë‚´ìš©ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”!");
 			$("#content").focus();
 			return false;
 		}
@@ -26,11 +26,11 @@
 <body>
 
 <div class="wrapper">
-	<h3>»õ ±Û ¾²±â</h3>
+	<h3>ìƒˆ ê¸€ ì“°ê¸°</h3>
 	<form action="write.do" method="post" onsubmit="return writeFormCheck()" enctype="multipart/form-data">
 		<table class="boardWrite">
 			<tr>
-				<th><label for="subject">Á¦¸ñ</label></th>
+				<th><label for="subject">ì œëª©</label></th>
 				<td>
 					<input type="text" id="subject" name="subject" class="boardSubject" />
 					<input type="hidden" id="writer" name="writer" value="${userName }" />
@@ -38,20 +38,20 @@
 				</td>
 			</tr>
 			<tr>
-				<th><label for="content">³»¿ë</label></th>
+				<th><label for="content">ë‚´ìš©</label></th>
 				<td><textarea id="content" name="content" class="boardContent"></textarea></td>
 			</tr>
 			<tr>
-				<th><label for="file">ÆÄÀÏ</label></th>
+				<th><label for="file">íŒŒì¼</label></th>
 				<td>
 					<input type="file" id="file" name="file" />
-					<span class="date">&nbsp;&nbsp;*&nbsp;ÀÓÀÇ·Î ÆÄÀÏ¸íÀÌ º¯°æµÉ ¼ö ÀÖ½À´Ï´Ù</span>
+					<span class="date">&nbsp;&nbsp;*&nbsp;ì„ì˜ë¡œ íŒŒì¼ëª…ì´ ë³€ê²½ë  ìˆ˜ ìˆìŠµë‹ˆë‹¤</span>
 				</td>
 			</tr>
 		</table>
 		<br />
-		<input type="reset" value="ÀçÀÛ¼º" class="writeBt" />
-		<input type="submit" value="È®ÀÎ" class="writeBt" />
+		<input type="reset" value="ì¬ì‘ì„±" class="writeBt" />
+		<input type="submit" value="í™•ì¸" class="writeBt" />
 	</form>
 </div>
 

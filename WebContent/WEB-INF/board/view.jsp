@@ -30,20 +30,20 @@
 	
 	function moveAction(where){
 		switch (where) {
-		case1:
+		case 1:
 			if(confirm("글을 삭제하시겠습니까?")){
 				location.href="delete.do?idx=${board.idx}";
 			}
 			break;
-		case2:
+		case 2:
 			if(confirm("글을 수정하시겠습니까?")){
 				location.href = "modify.do?idx=${board.idx}";
 			}
 			break;
-		case3:
+		case 3:
 			location.href = "list.do";
 			break;
-		case4:
+		case 4:
 			if(confirm("글을 추천하시겠습니까?")){
 				location.href="recommend.do?idx=${board.idx}";
 			}

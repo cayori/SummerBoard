@@ -58,6 +58,9 @@ public class BoardController {
 		if(request.getParameter("type") != null) {
 			type = request.getParameter("type").trim();
 		}
+		if(request.getParameter("keyword") != null) {
+			keyword = request.getParameter("keyword").trim();
+		}
 		//
 		
 		// 게시물 변수 지정 
@@ -173,25 +176,28 @@ public class BoardController {
 	@RequestMapping(value="/write.do", method=RequestMethod.POST)
 	public String boardWriteProc (@ModelAttribute("BoardModel") BoardModel boardModel, MultipartHttpServletRequest request) {
 		
-		// 업로드 파일 가져오기
-		MultipartFile file = request.getFile("file");
-		String fileName = file.getOriginalFilename();
-		File uploadFile = new File(uploadPath + fileName);
-		
-		// 파일이름 중복될때
-		if(uploadFile.exists()) {
-			fileName = new Date().getTime() + fileName;
-			uploadFile = new File(uploadPath = fileName);
-		}
-		
-		// 업로드 경로에 파일 저장
-		try {
-			file.transferTo(uploadFile);
-		}catch(Exception e) {
+		if(request.getFile("file") != null || request.getFile("file").toString().trim().equals("")) {
+			// 업로드 파일 가져오기
+			MultipartFile file = request.getFile("file");
+			String fileName = file.getOriginalFilename();
+			File uploadFile = new File(uploadPath + fileName);
+			System.out.println("현재 파일이름: "+ fileName);
+			// 파일이름 중복될때
+			if(uploadFile.exists()) {
+				fileName = new Date().getTime() + fileName;
+				uploadFile = new File(uploadPath = fileName);
+			}
+			System.out.println("중복체크 후 파일이름: "+ fileName);
 			
+			// 업로드 경로에 파일 저장
+			try {
+				file.transferTo(uploadFile);
+			}catch(Exception e) {
+				
+			}
+			boardModel.setFileName(fileName);
+			//
 		}
-		boardModel.setFileName(fileName);
-		//
 		
 		// 개행문자 br 태그로 바꾸기
 		String content = boardModel.getContent().replaceAll("\r\n", "<br />");
