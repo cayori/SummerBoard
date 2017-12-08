@@ -22,9 +22,9 @@
 		}
 	}
 	
-	function commentDelete(commentIdx, linkedArticlenum){
+	function commentDelete(commentIdx, linkedArticleNum){
 		if(confirm("선택하신 댓글을 삭제하시겠습니까?")){
-			location.href("commentDelete.do?idx=" +commentIdx+ "&linkedArticleNum=" +linkedArticleNum);
+			location.href="commentDelete.do?idx=" +commentIdx+ "&linkedArticleNum=" +linkedArticleNum;
 		}
 	}
 	

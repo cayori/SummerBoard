@@ -35,16 +35,15 @@
 
 <body onload="checkErrCode()">
 <div class="wrapper">
-	<h3>스프링 게시판</h3>
+	<h3>회원정보</h3>
 		<spring:hasBindErrors name="MemberModel" />
 		<form:errors path="MemberModel" />
 		<form action="profile.do" method="post">
 			<fieldset>
+				회원번호 : ${idx } <br />
 				<label for="userId">아이디 : </label>
 				<input type="text" id="userId" name="userId" class="loginInput" value="${userId }" readonly />
-				<span class="error">
-					<form:errors path="LoginModel.userId" />
-				</span><br>
+				<br>
 				
 				<label for="userPw">비밀번호 : </label>
 				<input type="password" id="userPw" name="userPw" class="loginInput" />

@@ -322,7 +322,7 @@ public class BoardController {
 	@RequestMapping("/commentDelete.do")
 	public ModelAndView commentDelete(HttpServletRequest request, HttpSession session) {
 		int idx = Integer.parseInt(request.getParameter("idx"));
-		int linkedArticleNum = Integer.parseInt(request.getParameter("linkedArticlenum"));
+		int linkedArticleNum = Integer.parseInt(request.getParameter("linkedArticleNum"));
 		
 		String userId = (String) session.getAttribute("userId");
 		BoardCommentModel comment = boardService.getOneComment(idx);
