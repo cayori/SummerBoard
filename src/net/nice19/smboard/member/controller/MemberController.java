@@ -52,5 +52,18 @@ public class MemberController {
 			return mav;
 		}
 	}
+	
+	@RequestMapping("/profile.do")
+	public String viewProfile(@ModelAttribute("MemberModel") MemberModel memberModel) {
+		return "/board/profile";
+	}
+	
+	@RequestMapping(value="/profile.do", method=RequestMethod.POST)
+	public ModelAndView modifyProfile(@ModelAttribute("MemberModel") MemberModel memberModel, BindingResult result) {
+		ModelAndView mvc = new ModelAndView();
+		
+		
+		return mvc;
+	}
 
 }

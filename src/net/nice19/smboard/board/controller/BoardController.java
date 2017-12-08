@@ -40,7 +40,7 @@ public class BoardController {
 	//
 	
 	// 파일 업로드 경로
-	private String uploadPath = "C:\\springBoardUpload";
+	private String uploadPath = "C:\\springBoardUpload\\";
 	//
 	
 	@RequestMapping("/list.do")
@@ -176,7 +176,7 @@ public class BoardController {
 	@RequestMapping(value="/write.do", method=RequestMethod.POST)
 	public String boardWriteProc (@ModelAttribute("BoardModel") BoardModel boardModel, MultipartHttpServletRequest request) {
 		
-		if(request.getFile("file") != null || request.getFile("file").toString().trim().equals("")) {
+		if(request.getFile("file") != null || request.getFile("file").getOriginalFilename().trim().equals("")) {
 			// 업로드 파일 가져오기
 			MultipartFile file = request.getFile("file");
 			String fileName = file.getOriginalFilename();
@@ -218,7 +218,6 @@ public class BoardController {
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("idx", commentModel.getLinkedArticleNum());
 		mav.setViewName("redirect:view.do");
-		
 		return mav;
 	}
 	
